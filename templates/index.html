@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Risk Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <div class="card">
+            <h1>💳 Loan Default Prediction</h1>
+
+            <form action="/predict" method="post">
+                <div class="grid">
+                    <div class="field">
+                    <label>Credit Policy</label>
+                    <input type="number" name="credit.policy" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Loan Purpose</label>
+                    <select name="purpose">
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debt_consolidation">Debt Consolidation</option>
+                    <option value="home_improvement">Home Improvement</option>
+                    <option value="major_purchase">Major Purchase</option>
+                    <option value="small_business">Small Business</option>
+                    </select>
+                    </div>
+
+                    <div class="field">
+                    <label>Interest Rate</label>
+                    <input type="number" step="any" name="int.rate" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Installment</label>
+                    <input type="number" step="any" name="installment" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Log Annual Income</label>
+                    <input type="number" step="any" name="log.annual.inc" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Debt To Income</label>
+                    <input type="number" step="any" name="dti" required>
+                    </div>
+
+                    <div class="field">
+                    <label>FICO Score</label>
+                    <input type="number" name="fico" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Credit Line Days</label>
+                    <input type="number" name="days.with.cr.line" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Revolving Balance</label>
+                    <input type="number" name="revol.bal" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Revolving Utilization</label>
+                    <input type="number" step="any" name="revol.util" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Inquiries Last 6 Months</label>
+                    <input type="number" name="inq.last.6mths" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Delinquencies 2 Years</label>
+                    <input type="number" name="delinq.2yrs" required>
+                    </div>
+
+                    <div class="field">
+                    <label>Public Records</label>
+                    <input type="number" name="pub.rec" required>
+                    </div>
+                </div>
+                <button type="submit">Analyze Loan Risk</button>
+            </form>
+            <h2 class="result">{{ prediction_text }}</h2>
+            {% if importance %}
+                <h3>Feature Importance</h3>
+                <canvas id="chart"></canvas>
+
+                <script>
+                    var data = JSON.parse('{{ importance | tojson | safe }}');
+                    var labels = Object.keys(data);
+                    var values = Object.values(data);
+                    new Chart(document.getElementById("chart"), {
+                    type: "bar",
+                    data: { labels: labels,
+                            datasets: [{ label: "Feature Importance",
+                                         data: values,
+                                         backgroundColor:"#00f5ff"
+                                    }]
+                      }
+                     });
+                </script>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
