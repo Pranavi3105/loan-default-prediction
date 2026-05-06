@@ -7,6 +7,14 @@ Features:
 - Feature importance visualization
 - Flask web interface
 
+## Technologies Used
+- Python
+- Flask
+- LightGBM
+- Scikit-learn
+- SMOTE
+- HTML/CSS
+  
 ## Run
 Train model:
 python train_model.py
